@@ -32,9 +32,9 @@ class BSTree {
 			}else if(n->elem==e){
 				throw runtime_error("Elemento duplicado");
 			}else if(n->elem < e){
-				n.right=insert(n->right,e);
+				n->right=insert(n->right,e);
 			}else{
-				n.left=insert(n->left,e);
+				n->left=insert(n->left,e);
 			}
 			return n;
 	    }
