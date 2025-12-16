@@ -15,63 +15,51 @@ private:
     BSTree<TableEntry<V>>* tree; 
 
 public:
+    // Constructor
     BSTreeDict() {
         tree = new BSTree<TableEntry<V>>();
     }
 
-    ~BSTreeDict() {
+    // Destructor 
+    ~BSTreeDict() override { 
         delete tree;
     }
 
+    // Metodo entries
     int entries() const override {
         return tree->size();
     }
 
+    // Metodo insert
     void insert(std::string key, V value) override {
-        TableEntry<V> entry(key, value);
-        if (tree->search(entry)) {
-            throw std::runtime_error("Duplicated element!");
-        }
-        tree->insert(entry);
+        TableEntry<V> entry_to_insert(key, value);
+        tree->insert(entry_to_insert);
     }
 
+    // metodo search
     V search(std::string key) const override {
-        TableEntry<V> entry(key);
-        TableEntry<V>* found = tree->search(entry);
-        if (!found) {
-            throw std::runtime_error("Element not found!");
-        }
-        return found->value;
+        TableEntry<V> entry_to_search(key);
+        TableEntry<V> found_entry = tree->search(entry_to_search); 
+        return found_entry.value;
     }
 
+    // metodo remove
     V remove(std::string key) override {
-        TableEntry<V> entry(key);
-        TableEntry<V>* found = tree->search(entry);
-        if (!found) {
-            throw std::runtime_error("Element not found!");
-        }
-        V val = found->value;
-        tree->remove(entry);
-        return val;
+        TableEntry<V> entry_to_remove(key);
+        TableEntry<V> removed_entry = tree->remove(entry_to_remove);
+        return removed_entry.value;
     }
 
+    // Sobrecarga operator[]
     V operator[](std::string key) {
-        return search(key);
+        return static_cast<const BSTreeDict<V>*>(this)->search(key);
     }
 
+    // Sobrecarga operator<< 
     friend std::ostream& operator<<(std::ostream &out, const BSTreeDict<V> &bs) {
         out << *(bs.tree);
         return out;
     }
-
-    friend bool operator<(const TableEntry<V> &te1, const TableEntry<V> &te2) {
-        return te1.key < te2.key;
-    }
-
-    friend bool operator>(const TableEntry<V> &te1, const TableEntry<V> &te2) {
-        return te1.key > te2.key;
-    }
-
 };
 
 #endif
